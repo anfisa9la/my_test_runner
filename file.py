@@ -13,6 +13,8 @@ class File:
         text = rtf_to_text(rtf)
         print(text)
 
-
+    def write(self, data):
+        with open(self.file_dir, mode='w') as file:
+            file.write(data)
 
 
