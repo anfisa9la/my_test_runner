@@ -11,7 +11,7 @@ class File:
         from striprtf.striprtf import rtf_to_text
         rtf = self.open()
         text = rtf_to_text(rtf)
-        print(text)
+        return text
 
     def write(self, data):
         with open(self.file_dir, mode='w') as file:
