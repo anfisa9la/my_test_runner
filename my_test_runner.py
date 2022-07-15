@@ -1,17 +1,20 @@
 import command_runner
+import configuration
+import email_sender
 import scheduler
 import sys
 
-direction = '/Users/anfisa/PycharmProjects/pythonProject/kata'
-txt_file = '/Users/anfisa/Desktop/test_log.txt'
-allure_result_dir = 'results'
+direction = configuration.direction
 
-use_allure = False
-stdout_to_file = True
+txt_file = '{}{}'.format(configuration.txt_path, configuration.txt_name)
+result_dir = configuration.allure_result_dir
+
+use_allure = configuration.use_allure
+stdout_to_file = configuration.stdout_to_file
 
 
 def create_test_command(direction, use_allure: bool, stdout_to_file: bool):
-    allure = ' --alluredir={}'.format(allure_result_dir) if use_allure else ''
+    allure = ' --alluredir={}'.format(result_dir) if use_allure else ''
     stdout = ' > {}'.format(txt_file) if stdout_to_file else ''
     return 'pytest {}{}{}'.format(direction, allure, stdout)
 
@@ -25,7 +28,7 @@ def run_tests():
 
 
 def create_report():
-    command_runner.run_command(create_report_command(allure_result_dir))
+    command_runner.run_command(create_report_command(result_dir))
 
 
 def run():
@@ -35,6 +38,12 @@ def run():
     elif stdout_to_file:
         sys.stdout = open(txt_file, "w")
         print(run_tests())
+        email_sender.send_mail(
+            configuration.sender,
+            configuration.password,
+            configuration.recipient,
+            configuration.msg
+        )
     else:
         run_tests()
 
